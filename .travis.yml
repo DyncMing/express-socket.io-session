@@ -15,6 +15,7 @@ jobs:
     script: yarn lint
   - stage: test
     script: yarn test
+    env: SHOULD_BUILD=true
   - 
     if: branch = master AND type != pull_request
     node_js: 8
@@ -33,11 +34,13 @@ deploy:
       condition: $SHOULD_BUILD = true
       all_branches: true
       master: false
+      condition: $SHOULD_BUILD=true
   - provider: script
     script: yarn deploy-example --token=$NOW_TOKEN && now alias --token=$NOW_TOKEN
     skip_cleanup: true
     on:
       master: true
+      condition: $SHOULD_BUILD=true
 
 # Run push builds only on aster
 branches:
